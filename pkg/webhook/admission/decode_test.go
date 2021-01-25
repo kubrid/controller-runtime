@@ -82,7 +82,7 @@ var _ = Describe("Admission Webhook Decoder", func() {
 	It("should decode a valid admission request", func() {
 		By("extracting the object from the request")
 		var actualObj corev1.Pod
-		Expect(decoder.Decode(req, &actualObj)).To(Succeed())
+		Expect(decoder.Decode(req, &actualObj, nil)).To(Succeed())
 
 		By("verifying that all data is present in the object")
 		Expect(actualObj).To(Equal(corev1.Pod{
@@ -127,7 +127,7 @@ var _ = Describe("Admission Webhook Decoder", func() {
 
 	It("should fail to decode if the object in the request doesn't match the passed-in type", func() {
 		By("trying to extract a pod from the quest into a node")
-		Expect(decoder.Decode(req, &corev1.Node{})).NotTo(Succeed())
+		Expect(decoder.Decode(req, &corev1.Node{}, nil)).NotTo(Succeed())
 
 		By("trying to extract a pod in RawExtension format into a node")
 		Expect(decoder.DecodeRaw(req.OldObject, &corev1.Node{})).NotTo(Succeed())
@@ -136,7 +136,7 @@ var _ = Describe("Admission Webhook Decoder", func() {
 	It("should be able to decode into an unstructured object", func() {
 		By("decoding the request into an unstructured object")
 		var target unstructured.Unstructured
-		Expect(decoder.Decode(req, &target)).To(Succeed())
+		Expect(decoder.Decode(req, &target, nil)).To(Succeed())
 
 		By("sanity-checking the metadata on the output object")
 		Expect(target.Object["metadata"]).To(Equal(map[string]interface{}{

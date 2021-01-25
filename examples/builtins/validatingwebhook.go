@@ -38,7 +38,7 @@ type podValidator struct {
 func (v *podValidator) Handle(ctx context.Context, req admission.Request) admission.Response {
 	pod := &corev1.Pod{}
 
-	err := v.decoder.Decode(req, pod)
+	err := v.decoder.Decode(req, pod, nil)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

@@ -39,12 +39,17 @@ func NewDecoder(scheme *runtime.Scheme) (*Decoder, error) {
 // Decode decodes the inlined object in the AdmissionRequest into the passed-in runtime.Object.
 // If you want decode the OldObject in the AdmissionRequest, use DecodeRaw.
 // It errors out if req.Object.Raw is empty i.e. containing 0 raw bytes.
-func (d *Decoder) Decode(req Request, into runtime.Object) error {
+func (d *Decoder) Decode(req Request, obj runtime.Object, oldObj runtime.Object) error {
 	// we error out if rawObj is an empty object.
 	if len(req.Object.Raw) == 0 {
 		return fmt.Errorf("there is no content to decode")
 	}
-	return d.DecodeRaw(req.Object, into)
+	if len(req.OldObject.Raw) != 0 && oldObj != nil {
+		if err := d.DecodeRaw(req.OldObject, oldObj); err != nil {
+			return err
+		}
+	}
+	return d.DecodeRaw(req.Object, obj)
 }
 
 // DecodeRaw decodes a RawExtension object into the passed-in runtime.Object.

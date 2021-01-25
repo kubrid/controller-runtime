@@ -414,7 +414,7 @@ type TestDefaulterList struct{}
 func (*TestDefaulterList) GetObjectKind() schema.ObjectKind { return nil }
 func (*TestDefaulterList) DeepCopyObject() runtime.Object   { return nil }
 
-func (d *TestDefaulter) Default() {
+func (d *TestDefaulter) Default(_ runtime.Object) {
 	if d.Replica < 2 {
 		d.Replica = 2
 	}
@@ -509,7 +509,7 @@ type TestDefaultValidatorList struct{}
 func (*TestDefaultValidatorList) GetObjectKind() schema.ObjectKind { return nil }
 func (*TestDefaultValidatorList) DeepCopyObject() runtime.Object   { return nil }
 
-func (dv *TestDefaultValidator) Default() {
+func (dv *TestDefaultValidator) Default(_ runtime.Object) {
 	if dv.Replica < 2 {
 		dv.Replica = 2
 	}

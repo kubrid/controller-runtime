@@ -108,7 +108,7 @@ func (c *ChaosPod) ValidateDelete() error {
 var _ webhook.Defaulter = &ChaosPod{}
 
 // Default implements webhookutil.defaulter so a webhook will be registered for the type
-func (c *ChaosPod) Default() {
+func (c *ChaosPod) Default(_ runtime.Object) {
 	log.Info("default", "name", c.Name)
 
 	if c.Spec.NextStop.Before(&metav1.Time{Time: time.Now()}) {

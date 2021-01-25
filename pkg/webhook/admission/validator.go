@@ -63,7 +63,7 @@ func (h *validatingHandler) Handle(ctx context.Context, req Request) Response {
 	// Get the object in the request
 	obj := h.validator.DeepCopyObject().(Validator)
 	if req.Operation == v1.Create {
-		err := h.decoder.Decode(req, obj)
+		err := h.decoder.Decode(req, obj, nil)
 		if err != nil {
 			return Errored(http.StatusBadRequest, err)
 		}

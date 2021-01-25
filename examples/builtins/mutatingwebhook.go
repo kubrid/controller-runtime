@@ -38,7 +38,7 @@ type podAnnotator struct {
 func (a *podAnnotator) Handle(ctx context.Context, req admission.Request) admission.Response {
 	pod := &corev1.Pod{}
 
-	err := a.decoder.Decode(req, pod)
+	err := a.decoder.Decode(req, pod, nil)
 	if err != nil {
 		return admission.Errored(http.StatusBadRequest, err)
 	}

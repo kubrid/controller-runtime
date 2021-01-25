@@ -27,7 +27,7 @@ import (
 // Defaulter defines functions for setting defaults on resources
 type Defaulter interface {
 	runtime.Object
-	Default()
+	Default(oldObj runtime.Object)
 }
 
 // DefaultingWebhookFor creates a new Webhook for Defaulting the provided type.
@@ -58,13 +58,14 @@ func (h *mutatingHandler) Handle(ctx context.Context, req Request) Response {
 
 	// Get the object in the request
 	obj := h.defaulter.DeepCopyObject().(Defaulter)
-	err := h.decoder.Decode(req, obj)
+	oldObj := h.defaulter.DeepCopyObject().(Defaulter)
+	err := h.decoder.Decode(req, obj, oldObj)
 	if err != nil {
 		return Errored(http.StatusBadRequest, err)
 	}
 
 	// Default the object
-	obj.Default()
+	obj.Default(oldObj)
 	marshalled, err := json.Marshal(obj)
 	if err != nil {
 		return Errored(http.StatusInternalServerError, err)
